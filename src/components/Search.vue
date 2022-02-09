@@ -1,9 +1,9 @@
 <template>
   <div class="container">
-    <input 
-      v-model="title" 
+    <input
+      v-model="title"
       class="form-control"
-      type="text" 
+      type="text"
       placeholder="Search for Movies, Series & more"
       @keyup.enter="apply" />
     <div class="selects">
@@ -12,7 +12,7 @@
         v-model="$data[filter.name]"
         :key="filter.name"
         class="form-select">
-        <option 
+        <option
           v-if="filter.name === 'year'"
           value="">
           All Years
@@ -24,17 +24,15 @@
         </option>
       </select>
     </div>
-    <button 
-      class="btn btn-primary" 
+    <button
+      class="btn btn-primary"
       @click="apply">
-      Apply 
-      </button>
+      Apply
+    </button>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   data() {
     return {
@@ -45,7 +43,7 @@ export default {
       filters: [
         {
           name: 'type',
-          items: ['movie', 'seires', 'episode']
+          items: ['movie', 'series', 'episode']
         },
         {
           name: 'number',
@@ -53,11 +51,10 @@ export default {
         },
         {
           name: 'year',
-          //즉시 실행 함수
           items: (() => {
             const years = []
-            const thisYear = new Date().getFullYear() // 2022
-            for (let i = thisYear; i >= 1985; i-=1){
+            const thisYear = new Date().getFullYear()
+            for (let i = thisYear; i >= 1985; i -= 1) {
               years.push(i)
             }
             return years
@@ -67,11 +64,13 @@ export default {
     }
   },
   methods: {
-    async apply() {
-      // Search movies...
-      const OMDB_API_KEY = '2574b6bd' 
-      const res = await axios.get(`https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${this.title}&type=${this.type}&y=${this.year}&page=1`)
-      console.log(res)
+    apply() {
+      this.$store.dispatch('movie/searchMovies', {
+        title: this.title,
+        type: this.type,
+        number: this.number,
+        year: this.year
+      })
     }
   }
 }
@@ -84,14 +83,14 @@ export default {
     margin-right: 10px;
     font-size: 15px;
     &:last-child {
-      margin-right: 0px;
+      margin-right: 0;
     }
   }
   .selects {
     display: flex;
     select {
-      width: 120px; 
-      margin-right: 10px; 
+      width: 120px;
+      margin-right: 10px;
       &:last-child {
         margin-right: 0;
       }
@@ -100,8 +99,8 @@ export default {
   .btn {
     width: 120px;
     height: 50px;
-    font-weight: 700;
     flex-shrink: 0;
+    font-weight: 700;
   }
 }
 </style>
