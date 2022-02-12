@@ -5,8 +5,9 @@ export default {
   namespaced: true,
   state: () => ({
     movies: [],
-    message: '',
-    loading: false
+    message: 'Search for the movie title!',
+    loading: false,
+    theMovie: {}
   }),
   getters: {},
   mutations: {
@@ -23,6 +24,13 @@ export default {
   },
   actions: {
     async searchMovies({ state, commit }, payload) {
+      if (state.loading) return 
+      
+      commit('updateState', {
+        message: '',
+        loading: true
+      })
+
       try{
         const res = await _fetchMovie({
           ...payload,
@@ -58,15 +66,44 @@ export default {
           movies: [],
           message
         })
+      } finally{
+        commit('updateState', {
+          loading: false 
+        })
+      }
+    },
+    async searchMovieWithId({state,commit}, payload) {
+      if (state.loading) return
+      
+      commit('updateState', {
+        theMovie: {},
+        loading: true
+      })
+
+      try {
+        const res = await _fetchMovie(payload)
+        commit('updateState', {
+          theMovie: res.data
+        })
+      } catch (error) {
+        commit('updateState', {
+          theMovie: {}
+        })
+      } finally {
+        commit('updateState', {
+          loading: false
+        })
       }
     }
   }
 }
 
 function _fetchMovie(payload) {
-  const { title, type, year, page } = payload
+  const { title, type, year, page, id } = payload
   const OMDB_API_KEY = '2574b6bd' 
-  const url = `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`
+  const url = id 
+    ? `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${id}` 
+    : `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`
 
 
   return new Promise((resolve, reject) =>{
