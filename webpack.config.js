@@ -46,7 +46,12 @@ module.exports = {
           'style-loader',
           'css-loader',
           'postcss-loader',
-          'sass-loader'
+          {
+            loader: 'sass-loader',
+            options: {
+              additionalData: '@import "~/scss/main";'
+            }
+          }
         ]
       },
       {
@@ -79,7 +84,7 @@ module.exports = {
   // 개발 서버 옵션
   devServer: {
     host: 'localhost',
-    port: 8080,
+    port: 8081,
     hot: true
   }
 }

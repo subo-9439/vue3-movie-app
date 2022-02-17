@@ -15,11 +15,19 @@
         </RouterLink>
       </div>
     </div>
+    <div
+      class="user"
+      @click="toAbout">
+      <img
+        :src="image"
+        :alt="name" />
+    </div>
   </header>
 </template>
 
 <script>
 import Logo from '~/components/Logo'
+
 export default {
   components: {
     Logo
