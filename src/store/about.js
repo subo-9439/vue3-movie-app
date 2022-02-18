@@ -4,6 +4,6 @@ export default {
     name: 'SUBO',
     email: '깃허브',
     phone: '010-7153-6281',
-    image: 'https://heropy.blog/css/images/logo.png'
+    image: '../static/123.png'
   })
 }
